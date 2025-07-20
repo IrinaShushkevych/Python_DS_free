@@ -5,6 +5,7 @@ from keras.models import Sequential
 from keras.layers import Flatten, Dense, Dropout
 from keras.applications import VGG16
 from keras.optimizers import Adam
+import pandas as pd
 
 fashion_mnist = keras.datasets.fashion_mnist
 (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -46,7 +47,7 @@ model.compile(optimizer=optimizer,
               metrics=['accuracy'])
 
 batch_size = 128
-epochs = 40
+epochs = 60
 
 history = model.fit(train_images, train_labels,
           batch_size=batch_size,
@@ -90,6 +91,14 @@ history = model.fit(train_images, train_labels,
           batch_size=batch_size,
           epochs=epochs,
           validation_data=(test_images, test_labels))
+
+hist_df = pd.DataFrame(history.history)
+
+# save to json:
+hist_json_file = 'history_2.json'
+with open(hist_json_file, mode='w') as f:
+    hist_df.to_json(f)
+
 
 _, accuracy = model.evaluate(test_images, test_labels)
 print(f'Точність на тестових даних: {accuracy * 100:.2f}%')

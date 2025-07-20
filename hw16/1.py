@@ -40,7 +40,15 @@ model.compile(
     metrics=['accuracy']
 )
 
-model.fit(train_images, train_labels, epochs=40, batch_size=512)
+history = model.fit(train_images, train_labels, epochs=60, batch_size=512)
+
+hist_df = pd.DataFrame(history.history)
+
+# save to json:
+hist_json_file = 'history.json'
+with open(hist_json_file, mode='w') as f:
+    hist_df.to_json(f)
+
 
 test_loss, test_acc = model.evaluate(test_images, test_labels)
 print('Test accuracy:', test_acc)
